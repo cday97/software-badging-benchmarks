@@ -1,0 +1,86 @@
+---
+title: "Make Clean Data"
+output: html_notebook
+---
+
+# Overhead
+```{r overhead, include = FALSE}
+packages_vector <- c("tidyverse",
+                     "arrow")
+
+need_to_install <- packages_vector[!(packages_vector %in% installed.packages()[,"Package"])]
+
+if (length(need_to_install)) install.packages(need_to_install)
+
+for (package in packages_vector) {
+  library(package, character.only = TRUE)
+}
+
+
+```
+
+# Remote I/O
+```{r remote-io}
+input_dir <- "./original-data/"
+output_dir <- "./"
+
+household_seed_file_name <- paste0(input_dir, "seed_households.csv")
+
+output_data_dictionary_file_name <- paste0(output_dir, "data_dictionary.csv")
+output_household_seed_file_name <- paste0(output_dir, "household_seed")
+
+```
+
+# Parameters
+```{r parameters}
+
+```
+
+# Data Reads
+```{r read}
+hh_seed_df <- read_csv(household_seed_file_name, 
+                       col_types = cols(.default = col_integer(),
+                                        RT = col_character(),
+                                        SERIALNO = col_character(),
+                                        HHT = col_character(),
+                                        BLD = col_character(),
+                                        HINCP = col_character(),
+                                        HUPAC = col_character(),
+                                        NPF = col_character(),
+                                        TEN = col_character(),
+                                        VEH = col_character(),
+                                        hh_income_2000 = col_double(),
+                                        hh_income_2010 = col_double()))
+```
+
+# Clean
+```{r methods}
+make_integers_vector <- c("HHT", "BLD", "HINCP", "HUPAC", "NPF", "TEN", "VEH")
+output_hh_seed_df <- hh_seed_df %>%
+  mutate(across(all_of(make_integers_vector), as.integer))
+  
+
+```
+
+# Data Dictionary
+```{r data-dictionary}
+dict_df <- tibble(file = c("household_seed",
+                           "household_seed",
+                           "household_seed"),
+                  variable = c("hh_workers_from_esr",
+                               "hh_income_2000",
+                               "hh_income_2010"),
+                  definiton = c("Number of workers in the household derived from the PUMS ESR variable",
+                                "Household income expressed in Year 2000 dollars",
+                                "Household income expressed in Year 2010 dollars"))
+```
+
+
+# Write
+```{r write}
+write_csv(dict_df, path = output_data_dictionary_file_name)
+
+write_csv(output_hh_seed_df, path = paste0(output_household_seed_file_name, ".csv"))
+write_feather(output_hh_seed_df, sink = paste0(output_household_seed_file_name, ".feather"))
+```
+

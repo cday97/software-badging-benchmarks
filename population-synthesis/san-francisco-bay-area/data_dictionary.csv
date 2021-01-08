@@ -1,0 +1,4 @@
+file,variable,definiton
+household_seed,hh_workers_from_esr,Number of workers in the household derived from the PUMS ESR variable
+household_seed,hh_income_2000,Household income expressed in Year 2000 dollars
+household_seed,hh_income_2010,Household income expressed in Year 2010 dollars
