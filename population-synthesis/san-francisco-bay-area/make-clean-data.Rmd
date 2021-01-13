@@ -25,15 +25,29 @@ input_dir <- "./original-data/"
 output_dir <- "./"
 
 household_seed_file_name <- paste0(input_dir, "seed_households.csv")
+person_seed_file_name <- paste0(input_dir, "seed_persons.csv")
+regional_marg_file_name <- paste0(input_dir, "census_regional_marginals_2015.csv")
+county_marg_file_name <- paste0(input_dir, "census_county_marginals_2015.csv")
 
 output_data_dictionary_file_name <- paste0(output_dir, "data_dictionary.csv")
 output_household_seed_file_name <- paste0(output_dir, "household_seed")
+output_person_seed_file_name <- paste0(output_dir, "person_seed")
+output_marginal_database_file_name <- paste0(output_dir, "marginals")
 
 ```
 
 # Parameters
 ```{r parameters}
-
+county_dict_df <- tibble(county = seq(from = 1, to = 9),
+                         county_name = c("San Francisco",
+                                         "San Mateo",
+                                         "Santa Clara",
+                                         "Alameda",
+                                         "Contra Costa",
+                                         "Solano",
+                                         "Napa",
+                                         "Sonoma", 
+                                         "Marin"))
 ```
 
 # Data Reads
@@ -51,13 +65,66 @@ hh_seed_df <- read_csv(household_seed_file_name,
                                         VEH = col_character(),
                                         hh_income_2000 = col_double(),
                                         hh_income_2010 = col_double()))
+
+person_seed_df <- read_csv(person_seed_file_name, 
+                           col_types = cols(.default = col_integer(),
+                                            RT = col_character(),
+                                            SERIALNO = col_character(),
+                                            COW = col_character(),
+                                            MIL = col_character(),
+                                            SCHL = col_character(),
+                                            SCHG = col_character(),
+                                            WKHP = col_character(),
+                                            WKW = col_character(),
+                                            PINCP = col_character(),
+                                            POWPUMA = col_character(),
+                                            naicsp07 = col_character(),
+                                            socp00 = col_character(),
+                                            socp10 = col_character(),
+                                            indp02 = col_character(),
+                                            indp07 = col_character(),
+                                            occp02 = col_character(),
+                                            soc = col_character(),
+                                            occp10 = col_character()))
+
+county_marg_df <- read_csv(county_marg_file_name, col_types = cols(.default = col_integer()))
+
+regional_marg_df <- read_csv(regional_marg_file_name, col_types = cols(.default = col_integer()))
 ```
 
 # Clean
 ```{r methods}
+# Households
 make_integers_vector <- c("HHT", "BLD", "HINCP", "HUPAC", "NPF", "TEN", "VEH")
 output_hh_seed_df <- hh_seed_df %>%
   mutate(across(all_of(make_integers_vector), as.integer))
+
+# Persons
+# START HERE: make integer, drop, document
+make_integers_vector <- c("COW", "MIL", "PINCP", "POWPUMA")
+output_person_seed_df 
+
+# Marginals
+regional_df <- regional_marg_df %>%
+  rename(region = REGION) %>%
+  mutate(geography = "region",
+         geography_name = "San Francisco Bay Area") %>%
+  rename(geography_index = region) %>%
+  pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
+               names_to = "variable", 
+               values_to = "marginal")
+
+county_df <- county_marg_df %>%
+  rename(county = COUNTY) %>%
+  left_join(., county_dict_df, by = c("county")) %>%
+  mutate(geography = "county") %>%
+  rename(geography_index = county, geography_name = county_name) %>%
+  pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
+               names_to = "variable", 
+               values_to = "marginal")
+
+marginals_df <- bind_rows(regional_df, county_df) %>%
+  mutate(year = 2015)
   
 
 ```
@@ -66,13 +133,16 @@ output_hh_seed_df <- hh_seed_df %>%
 ```{r data-dictionary}
 dict_df <- tibble(file = c("household_seed",
                            "household_seed",
-                           "household_seed"),
+                           "household_seed",
+                           "marginals"),
                   variable = c("hh_workers_from_esr",
                                "hh_income_2000",
-                               "hh_income_2010"),
+                               "hh_income_2010",
+                               "pers_occ_[occupation]"),
                   definiton = c("Number of workers in the household derived from the PUMS ESR variable",
                                 "Household income expressed in Year 2000 dollars",
-                                "Household income expressed in Year 2010 dollars"))
+                                "Household income expressed in Year 2010 dollars",
+                                "Persons by occupation category"))
 ```
 
 
