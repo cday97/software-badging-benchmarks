@@ -1,4 +1,9 @@
 file,variable,definiton
-household_seed,hh_workers_from_esr,Number of workers in the household derived from the PUMS ESR variable
-household_seed,hh_income_2000,Household income expressed in Year 2000 dollars
-household_seed,hh_income_2010,Household income expressed in Year 2010 dollars
+household_seed,weight,PUMS expansion factor for household record
+household_seed,size,Number of persons in the household
+"household_seed, person_seed",county_index,Integer index for County consistent with geography_index
+"household_seed, person_seed",unique_hh_id,Unique household identification number
+marginals,pers_occ_[occupation],Persons by occupation category
+marginals,number_households,"Number of households, including group quarters"
+marginals,size_is_[number of persons],"Number of persons in the household, from 1 to 4+"
+person_seed,occ_[occupation],Occupation category
