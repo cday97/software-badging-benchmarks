@@ -1,9 +1,17 @@
 file,variable,definiton
 household_seed,weight,PUMS expansion factor for household record
 household_seed,size,Number of persons in the household
+household_seed,income,Income category -- incomes expressed in $2000
+household_seed,workers,Number of workers in the household
 "household_seed, person_seed",county_index,Integer index for County consistent with geography_index
 "household_seed, person_seed",unique_hh_id,Unique household identification number
 marginals,pers_occ_[occupation],Persons by occupation category
 marginals,number_households,"Number of households, including group quarters"
 marginals,size_is_[number of persons],"Number of persons in the household, from 1 to 4+"
+marginals,income_[category],"Household income category, incomes expressed in $2000"
+marginals,worker_[category],"Number of workers in the household, from 1 to 3+"
+marginals,age_is_[category],Person age category
+marginals,group_quarters_is_[category],Group quarters living arrangement
 person_seed,occ_[occupation],Occupation category
+person_seed,age,Age in years
+person_seed,group_quarters_type,Category of group quarters living arrangement
