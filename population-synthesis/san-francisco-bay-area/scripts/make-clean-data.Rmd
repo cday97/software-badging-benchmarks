@@ -66,6 +66,7 @@ hh_seed_df <- read_csv(household_seed_file_name,
                                         NPF = col_character(),
                                         TEN = col_character(),
                                         VEH = col_character(),
+                                        WGTP = col_double(),
                                         hh_income_2000 = col_double(),
                                         hh_income_2010 = col_double()))
 
@@ -124,12 +125,15 @@ output_hh_seed_df <- hh_seed_df %>%
 make_integers_vector <- c("COW", "MIL", "PINCP", "POWPUMA")
 output_person_seed_df <- person_seed_df %>%
   mutate(across(all_of(make_integers_vector), as.integer)) %>%
-  mutate(occ_management = (occupation == 1 & employed == 1)) %>%
-  mutate(occ_professional = (occupation == 2 & employed == 1)) %>%
-  mutate(occ_services = (occupation == 3 & employed == 1)) %>%
-  mutate(occ_retail = (occupation == 4 & employed == 1)) %>%
-  mutate(occ_manual = (occupation == 5 & employed == 1)) %>%
-  mutate(occ_military = (occupation == 6 & employed == 1)) %>%
+  mutate(occupation = case_when(
+    occupation == 1 & employed == 1 ~ "management",
+    occupation == 2 & employed == 1 ~ "professional",
+    occupation == 3 & employed == 1 ~ "services",
+    occupation == 4 & employed == 1 ~ "retail",
+    occupation == 5 & employed == 1 ~ "manual",
+    occupation == 6 & employed == 1 ~ "military",
+    TRUE ~ "Missing"
+  )) %>%
   mutate(age = AGEP) %>%
   mutate(group_quarters_type = case_when(
     gqtype == 1 ~ "University",
@@ -138,9 +142,8 @@ output_person_seed_df <- person_seed_df %>%
     TRUE ~ "Not in group quarters"
   )) %>%
   select(RT, SERIALNO, SPORDER, PUMA, ST, PWGTP, AGEP, COW, MAR, MIL, RELP,
-         SCHG, SCHL, SEX, WKHP, WKW, ESR, HISP, PINCP, POWPUMA, 
-         occ_management, occ_professional, occ_services, occ_retail, occ_manual, occ_military,
-         unique_hh_id, county_index = COUNTY, age, group_quarters_type)
+         SCHG, SCHL, SEX, WKHP, WKW, ESR, HISP, PINCP, POWPUMA,
+         unique_hh_id, county_index = COUNTY, age, occupation, group_quarters_type)
 
 # Marginals
 county_df <- county_marg_df %>%
@@ -151,6 +154,7 @@ county_df <- county_marg_df %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
                names_to = "variable", 
                values_to = "marginal") %>%
+  mutate(variable = str_replace(variable, "pers_occ_", "occupation_is_")) %>%
   mutate(person_or_household = "person")
 
 taz_hh_df <- taz_marg_df %>%
@@ -220,6 +224,7 @@ dict_df <- tibble(file = c("household_seed",
                            "household_seed",
                            "household_seed, person_seed",
                            "household_seed, person_seed",
+                           "household_seed, person_seed",
                            "marginals",
                            "marginals",
                            "marginals",
@@ -234,22 +239,24 @@ dict_df <- tibble(file = c("household_seed",
                                "size",
                                "income",
                                "workers",
+                               "VARIABLES IN CAPS",
                                "county_index",
                                "unique_hh_id",
-                               "pers_occ_[occupation]",
+                               "occupation_is_[occupation]",
                                "number_households",
                                "size_is_[number of persons]",
                                "income_[category]",
                                "worker_[category]",
                                "age_is_[category]",
                                "group_quarters_is_[category]",
-                               "occ_[occupation]",
+                               "occupation",
                                "age",
                                "group_quarters_type"),
                   definiton = c("PUMS expansion factor for household record",
                                 "Number of persons in the household",
-                                "Income category -- incomes expressed in $2000",
+                                "Income category, incomes expressed in $2000",
                                 "Number of workers in the household",
+                                "Standard PUMS variables, see: https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2014-2018.csv",
                                 "Integer index for County consistent with geography_index",
                                 "Unique household identification number",
                                 "Persons by occupation category",
@@ -262,6 +269,8 @@ dict_df <- tibble(file = c("household_seed",
                                 "Occupation category",
                                 "Age in years",
                                 "Category of group quarters living arrangement"))
+
+dict_df <- arrange(dict_df, file, variable)
 ```
 
 
