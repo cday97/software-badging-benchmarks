@@ -1,58 +1,58 @@
 geography_index,geography_name,geography,variable,marginal,person_or_household,year
-1,San Francisco,county,pers_occ_management,74936,person,2015
-1,San Francisco,county,pers_occ_professional,170328,person,2015
-1,San Francisco,county,pers_occ_services,115925,person,2015
-1,San Francisco,county,pers_occ_retail,82826,person,2015
-1,San Francisco,county,pers_occ_manual,60898,person,2015
-1,San Francisco,county,pers_occ_military,415,person,2015
-2,San Mateo,county,pers_occ_management,56577,person,2015
-2,San Mateo,county,pers_occ_professional,119639,person,2015
-2,San Mateo,county,pers_occ_services,94359,person,2015
-2,San Mateo,county,pers_occ_retail,62577,person,2015
-2,San Mateo,county,pers_occ_manual,71739,person,2015
-2,San Mateo,county,pers_occ_military,301,person,2015
-3,Santa Clara,county,pers_occ_management,128177,person,2015
-3,Santa Clara,county,pers_occ_professional,342876,person,2015
-3,Santa Clara,county,pers_occ_services,194128,person,2015
-3,Santa Clara,county,pers_occ_retail,132853,person,2015
-3,Santa Clara,county,pers_occ_manual,169109,person,2015
-3,Santa Clara,county,pers_occ_military,569,person,2015
-4,Alameda,county,pers_occ_management,98978,person,2015
-4,Alameda,county,pers_occ_professional,257734,person,2015
-4,Alameda,county,pers_occ_services,198881,person,2015
-4,Alameda,county,pers_occ_retail,115038,person,2015
-4,Alameda,county,pers_occ_manual,155626,person,2015
-4,Alameda,county,pers_occ_military,1485,person,2015
-5,Contra Costa,county,pers_occ_management,70029,person,2015
-5,Contra Costa,county,pers_occ_professional,139222,person,2015
-5,Contra Costa,county,pers_occ_services,131134,person,2015
-5,Contra Costa,county,pers_occ_retail,86098,person,2015
-5,Contra Costa,county,pers_occ_manual,108924,person,2015
-5,Contra Costa,county,pers_occ_military,808,person,2015
-6,Solano,county,pers_occ_management,18243,person,2015
-6,Solano,county,pers_occ_professional,40422,person,2015
-6,Solano,county,pers_occ_services,54791,person,2015
-6,Solano,county,pers_occ_retail,31258,person,2015
-6,Solano,county,pers_occ_manual,51566,person,2015
-6,Solano,county,pers_occ_military,4260,person,2015
-7,Napa,county,pers_occ_management,9001,person,2015
-7,Napa,county,pers_occ_professional,14334,person,2015
-7,Napa,county,pers_occ_services,16394,person,2015
-7,Napa,county,pers_occ_retail,12593,person,2015
-7,Napa,county,pers_occ_manual,18819,person,2015
-7,Napa,county,pers_occ_military,36,person,2015
-8,Sonoma,county,pers_occ_management,29062,person,2015
-8,Sonoma,county,pers_occ_professional,53366,person,2015
-8,Sonoma,county,pers_occ_services,62262,person,2015
-8,Sonoma,county,pers_occ_retail,42477,person,2015
-8,Sonoma,county,pers_occ_manual,61967,person,2015
-8,Sonoma,county,pers_occ_military,876,person,2015
-9,Marin,county,pers_occ_management,23255,person,2015
-9,Marin,county,pers_occ_professional,38195,person,2015
-9,Marin,county,pers_occ_services,30542,person,2015
-9,Marin,county,pers_occ_retail,20485,person,2015
-9,Marin,county,pers_occ_manual,18092,person,2015
-9,Marin,county,pers_occ_military,177,person,2015
+1,San Francisco,county,occupation_is_management,74936,person,2015
+1,San Francisco,county,occupation_is_professional,170328,person,2015
+1,San Francisco,county,occupation_is_services,115925,person,2015
+1,San Francisco,county,occupation_is_retail,82826,person,2015
+1,San Francisco,county,occupation_is_manual,60898,person,2015
+1,San Francisco,county,occupation_is_military,415,person,2015
+2,San Mateo,county,occupation_is_management,56577,person,2015
+2,San Mateo,county,occupation_is_professional,119639,person,2015
+2,San Mateo,county,occupation_is_services,94359,person,2015
+2,San Mateo,county,occupation_is_retail,62577,person,2015
+2,San Mateo,county,occupation_is_manual,71739,person,2015
+2,San Mateo,county,occupation_is_military,301,person,2015
+3,Santa Clara,county,occupation_is_management,128177,person,2015
+3,Santa Clara,county,occupation_is_professional,342876,person,2015
+3,Santa Clara,county,occupation_is_services,194128,person,2015
+3,Santa Clara,county,occupation_is_retail,132853,person,2015
+3,Santa Clara,county,occupation_is_manual,169109,person,2015
+3,Santa Clara,county,occupation_is_military,569,person,2015
+4,Alameda,county,occupation_is_management,98978,person,2015
+4,Alameda,county,occupation_is_professional,257734,person,2015
+4,Alameda,county,occupation_is_services,198881,person,2015
+4,Alameda,county,occupation_is_retail,115038,person,2015
+4,Alameda,county,occupation_is_manual,155626,person,2015
+4,Alameda,county,occupation_is_military,1485,person,2015
+5,Contra Costa,county,occupation_is_management,70029,person,2015
+5,Contra Costa,county,occupation_is_professional,139222,person,2015
+5,Contra Costa,county,occupation_is_services,131134,person,2015
+5,Contra Costa,county,occupation_is_retail,86098,person,2015
+5,Contra Costa,county,occupation_is_manual,108924,person,2015
+5,Contra Costa,county,occupation_is_military,808,person,2015
+6,Solano,county,occupation_is_management,18243,person,2015
+6,Solano,county,occupation_is_professional,40422,person,2015
+6,Solano,county,occupation_is_services,54791,person,2015
+6,Solano,county,occupation_is_retail,31258,person,2015
+6,Solano,county,occupation_is_manual,51566,person,2015
+6,Solano,county,occupation_is_military,4260,person,2015
+7,Napa,county,occupation_is_management,9001,person,2015
+7,Napa,county,occupation_is_professional,14334,person,2015
+7,Napa,county,occupation_is_services,16394,person,2015
+7,Napa,county,occupation_is_retail,12593,person,2015
+7,Napa,county,occupation_is_manual,18819,person,2015
+7,Napa,county,occupation_is_military,36,person,2015
+8,Sonoma,county,occupation_is_management,29062,person,2015
+8,Sonoma,county,occupation_is_professional,53366,person,2015
+8,Sonoma,county,occupation_is_services,62262,person,2015
+8,Sonoma,county,occupation_is_retail,42477,person,2015
+8,Sonoma,county,occupation_is_manual,61967,person,2015
+8,Sonoma,county,occupation_is_military,876,person,2015
+9,Marin,county,occupation_is_management,23255,person,2015
+9,Marin,county,occupation_is_professional,38195,person,2015
+9,Marin,county,occupation_is_services,30542,person,2015
+9,Marin,county,occupation_is_retail,20485,person,2015
+9,Marin,county,occupation_is_manual,18092,person,2015
+9,Marin,county,occupation_is_military,177,person,2015
 1,1,taz,number,39,household,2015
 1,1,taz,size_is_2,14,household,2015
 1,1,taz,size_is_3,4,household,2015

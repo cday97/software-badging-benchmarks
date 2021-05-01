@@ -23,7 +23,7 @@ for (package in packages_vector) {
 # Remote I/O
 ```{r remote-io}
 input_dir <- "../original-data/"
-output_dir <- "./"
+output_dir <- "../"
 
 household_seed_file_name <- paste0(input_dir, "seed_households.csv")
 person_seed_file_name <- paste0(input_dir, "seed_persons.csv")
