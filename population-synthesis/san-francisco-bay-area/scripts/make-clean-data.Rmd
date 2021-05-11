@@ -108,42 +108,34 @@ make_integers_vector <- c("HHT", "BLD", "HINCP", "HUPAC", "NPF", "TEN", "VEH")
 output_hh_seed_df <- hh_seed_df %>%
   mutate(across(all_of(make_integers_vector), as.integer)) %>%
   mutate(weight = WGTP) %>%
-  mutate(size = NP) %>%
-  mutate(income = case_when (
-    TYPE == 1 & hh_income_2000 <= 30000 ~ "Quartile 1 - Less than 30000",
-    TYPE == 1 & hh_income_2000 > 30000 & hh_income_2000 <= 60000 ~ "Quartile 2 - 30000 to 60000",
-    TYPE == 1 & hh_income_2000 > 60000 & hh_income_2000 <= 100000 ~ "Quartile 3 - 60000 to 100000",
-    TYPE == 1 & hh_income_2000 > 100000 ~ "Quartile 4 - More than 100000",
-    TRUE ~ "Missing"
+  mutate(hhsize = NP) %>%
+  mutate(incomeQ = case_when (
+    TYPE == 1 & hh_income_2000 <= 30000                           ~ 1,
+    TYPE == 1 & hh_income_2000 > 30000 & hh_income_2000 <= 60000  ~ 2,
+    TYPE == 1 & hh_income_2000 > 60000 & hh_income_2000 <= 100000 ~ 3,
+    TYPE == 1 & hh_income_2000 > 100000                           ~ 4,
+    TRUE ~ 0
   )) %>%
   mutate(workers = if_else(TYPE == 1, hh_workers_from_esr, 0L)) %>%
   select(RT, SERIALNO, DIVISION, PUMA, REGION, ST, ADJINC, WGTP, NP,
          TYPE, BLD, HHT, HINCP, HUPAC, NPF, TEN, VEH, 
-         county_index = COUNTY, unique_hh_id, weight, size, income, workers)
+         county_index = COUNTY, unique_hh_id, weight, hhsize, incomeQ, workers)
+# remove NA
+output_hh_seed_df <- replace_na(output_hh_seed_df, 
+                                list(BLD=0,HHT=0,HINCP=0,HUPAC=0,NPF=0,TEN=0,VEH=0))
 
 # Persons 
 make_integers_vector <- c("COW", "MIL", "PINCP", "POWPUMA")
 output_person_seed_df <- person_seed_df %>%
   mutate(across(all_of(make_integers_vector), as.integer)) %>%
-  mutate(occupation = case_when(
-    occupation == 1 & employed == 1 ~ "management",
-    occupation == 2 & employed == 1 ~ "professional",
-    occupation == 3 & employed == 1 ~ "services",
-    occupation == 4 & employed == 1 ~ "retail",
-    occupation == 5 & employed == 1 ~ "manual",
-    occupation == 6 & employed == 1 ~ "military",
-    TRUE ~ "Missing"
-  )) %>%
+  mutate(occupation=ifelse(employed == 1, occupation, 0)) %>% # zero occupation unless employed==1
   mutate(age = AGEP) %>%
-  mutate(group_quarters_type = case_when(
-    gqtype == 1 ~ "University",
-    gqtype == 2 ~ "Military",
-    gqtype == 3 ~ "Other non-institutional",
-    TRUE ~ "Not in group quarters"
-  )) %>%
   select(RT, SERIALNO, SPORDER, PUMA, ST, PWGTP, AGEP, COW, MAR, MIL, RELP,
          SCHG, SCHL, SEX, WKHP, WKW, ESR, HISP, PINCP, POWPUMA,
-         unique_hh_id, county_index = COUNTY, age, occupation, group_quarters_type)
+         unique_hh_id, county_index = COUNTY, age, occupation, gqtype)
+# remove NA
+output_person_seed_df <- replace_na(output_person_seed_df, 
+                                    list(COW=0,MIL=0,SCHG=0,SCHL=0,WKHP=0,WKW=0,PINCP=0,POWPUMA=0))
 
 # Marginals
 county_df <- county_marg_df %>%
@@ -154,7 +146,13 @@ county_df <- county_marg_df %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
                names_to = "variable", 
                values_to = "marginal") %>%
-  mutate(variable = str_replace(variable, "pers_occ_", "occupation_is_")) %>%
+  mutate(variable = recode(variable, 
+                           pers_occ_management   = "occupation_is_1",
+                           pers_occ_professional = "occupation_is_2",
+                           pers_occ_services     = "occupation_is_3",
+                           pers_occ_retail       = "occupation_is_4",
+                           pers_occ_manual       = "occupation_is_5",
+                           pers_occ_military     = "occupation_is_6")) %>%
   mutate(person_or_household = "person")
 
 taz_hh_df <- taz_marg_df %>%
@@ -162,22 +160,22 @@ taz_hh_df <- taz_marg_df %>%
   rename(geography_index = TAZ) %>%
   mutate(geography_name = paste0(geography_index)) %>%
   rename(number = numhh_gq,
-         size_is_1 = hh_size_1_gq,
-         size_is_2 = hh_size_2,
-         size_is_3 = hh_size_3,
-         size_is_4_or_more = hh_size_4_plus,
-         income_less_than_30 = HHINCQ1,
-         income_30_to_60 = HHINCQ2,
-         income_60_to_100 = HHINCQ3,
-         income_more_than_100 = HHINCQ4,
+         hhsize_is_1 = hh_size_1_gq,
+         hhsize_is_2 = hh_size_2,
+         hhsize_is_3 = hh_size_3,
+         hhsize_is_4_or_more = hh_size_4_plus,
+         incomeQ_is_1 = HHINCQ1,
+         incomeQ_is_2 = HHINCQ2,
+         incomeQ_is_3 = HHINCQ3,
+         incomeQ_is_4 = HHINCQ4,
          workers_is_0 = hh_wrks_0,
          workers_is_1 = hh_wrks_1,
          workers_is_2 = hh_wrks_2,
          workers_is_3_or_more = hh_wrks_3_plus) %>%
   select(starts_with("geography"),
          number, 
-         starts_with("size_is_"),
-         starts_with("income_"),
+         starts_with("hhsize_is_"),
+         starts_with("incomeQ_is"),
          starts_with("workers_is")) %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
                names_to = "variable", 
@@ -193,12 +191,12 @@ taz_person_df <- taz_marg_df %>%
          age_is_20_to_44 = AGE2044,
          age_is_45_to_64 = AGE4564,
          age_is_65_and_older = AGE65P,
-         group_quarters_is_university = gq_type_univ,
-         group_quarters_is_military = gq_type_mil,
-         group_quarters_is_other = gq_type_othnon) %>%
+         gqtype_is_1 = gq_type_univ,
+         gqtype_is_2 = gq_type_mil,
+         gqtype_is_3 = gq_type_othnon) %>%
   select(starts_with("geography"),
          starts_with("age_is"),
-         starts_with("group_quarters_is")) %>%
+         starts_with("gqtype_is")) %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
                names_to = "variable", 
                values_to = "marginal") %>%
@@ -236,25 +234,25 @@ dict_df <- tibble(file = c("household_seed",
                            "person_seed",
                            "person_seed"),
                   variable = c("weight",
-                               "size",
-                               "income",
+                               "hhsize",
+                               "incomeQ",
                                "workers",
                                "VARIABLES IN CAPS",
                                "county_index",
                                "unique_hh_id",
                                "occupation_is_[occupation]",
                                "number_households",
-                               "size_is_[number of persons]",
-                               "income_[category]",
+                               "hhsize_is_[number of persons]",
+                               "incomeQ_[category]",
                                "worker_[category]",
                                "age_is_[category]",
-                               "group_quarters_is_[category]",
+                               "gqtype_is_[category]",
                                "occupation",
                                "age",
-                               "group_quarters_type"),
+                               "groupquarters"),
                   definiton = c("PUMS expansion factor for household record",
                                 "Number of persons in the household",
-                                "Income category, incomes expressed in $2000",
+                                "Income quantile category",
                                 "Number of workers in the household",
                                 "Standard PUMS variables, see: https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2014-2018.csv",
                                 "Integer index for County consistent with geography_index",
@@ -262,11 +260,11 @@ dict_df <- tibble(file = c("household_seed",
                                 "Persons by occupation category",
                                 "Number of households, including group quarters",
                                 "Number of persons in the household, from 1 to 4+",
-                                "Household income category, incomes expressed in $2000",
+                                "Household income quantile category based on $2000 (1=less than $30k, 2=$30k-$60k, 3=$60k-100k, 4=over $100k, 0=NA",
                                 "Number of workers in the household, from 1 to 3+",
                                 "Person age category",
-                                "Group quarters living arrangement",
-                                "Occupation category",
+                                "Group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=NA)",
+                                "Occupation category (1=management, 2=professional, 3=services, 4=retail, 5=manual, 6=military, 0=NA)",
                                 "Age in years",
                                 "Category of group quarters living arrangement"))
 
