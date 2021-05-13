@@ -25,6 +25,9 @@ cd example_zephyr_sfbayarea
 mkdir configs
 mkdir data
 mkdir output
+# Collect validation results across runs here
+mkdir validation
+cp $zephyr_sf_dir/scripts/validation.twb validation
 
 # start with config from example_calm
 cp ../example_calm/run_populationsim.py .
@@ -39,8 +42,12 @@ cp $zephyr_sf_dir/geographies.csv    data
 cp $zephyr_sf_dir/household_seed.csv data
 cp $zephyr_sf_dir/person_seed.csv    data
 
-# create the controls.csv and and control totals files from the marginals in
+# create configs/controls.csv and and control totals (data/control_totals_[county,taz].csv)
+# from the marginals
 /Library/Frameworks/R.framework/Resources/Rscript --vanilla $zephyr_sf_dir/scripts/setup_PopulationSim.R
+# create a suffix for saving results
+export suffix=$(date +%y%m%d_%H%M)
+cp configs/controls.csv validation/controls_$suffix.csv
 
 # run it!
 python run_populationsim.py
@@ -59,6 +66,8 @@ python run_populationsim.py
 # INFO - Time to execute all models : 1646.103 seconds (27.4 minutes)
 
 /Library/Frameworks/R.framework/Resources/Rscript --vanilla $zephyr_sf_dir/scripts/combine_PopulationSim_summaries.R
+cp output/final_summary_long.csv validation/final_summary_long_$suffix.csv
+
 ```
 
 Some things I found:

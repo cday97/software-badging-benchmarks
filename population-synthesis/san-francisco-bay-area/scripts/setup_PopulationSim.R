@@ -47,7 +47,7 @@ controls_df <- mutate(controls_df,
                    expr_value_num = suppressWarnings(as.numeric(expr_value)))
 
 # put together the pieces into an expression
-controls_df <- mutate(controls_df, 
+controls_df <- mutate(controls_df,
                    expression = case_when(
                      # e.g., households.size == 1
                      !is.na(expr_value_num) ~ paste0(seed_table,".",expr_name," == ", expr_value_num),
@@ -56,7 +56,7 @@ controls_df <- mutate(controls_df,
                                                                               seed_table,".",expr_name," <= ",expr_range_max,")"),
                      # e.g. (persons.age >= 65)
                      !is.na(expr_range_min) & is.na(expr_range_max) ~ paste0(seed_table,".",expr_name," >= ",expr_range_min),
-                     # e.g. 
+                     # e.g. (households.hhsize == 1)
                      is.na(expr_value_num) & !is.na(expr_value) ~ paste0(seed_table,".",expr_name," == '", expr_value, "'"),
                      # number is special!
                      control_field == "number" ~ "(households.WGTP > 0) & (households.WGTP < np.inf)",
@@ -65,8 +65,9 @@ controls_df <- mutate(controls_df,
 # following example_calm, total number of households is most important control
 controls_df <- mutate(controls_df,
                    importance = case_when(
-                     target=="number" ~ 1000000000,
-                     TRUE ~ 1000))
+                     target=="number"             ~ 1000000000, # 1e9
+                     TRUE                         ~ 1000
+                    ))
 
 # select just the columns we want
 controls_df <- select(controls_df, target, geography, seed_table, importance, control_field, expression)
@@ -82,7 +83,7 @@ for (geography_type in geography_list) {
   geog_marginals <- filter(marginals, geography==geography_type) %>%
     select(-person_or_household, -geography) %>%
     pivot_wider(names_from=variable, values_from=marginal)
-  
+
   # rename "geography_index" to the value of geography_type
   names(geog_marginals)[names(geog_marginals) == "geography_index"] <- geography_type
 
