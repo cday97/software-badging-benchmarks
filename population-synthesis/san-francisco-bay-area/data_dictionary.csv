@@ -3,8 +3,8 @@ household_seed,hhsize,Number of persons in the household
 household_seed,incomeQ,Income quantile category
 household_seed,weight,PUMS expansion factor for household record
 household_seed,workers,Number of workers in the household
+"household_seed, person_seed",[hh]gqtype,"Group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=NA)"
 "household_seed, person_seed",county_index,Integer index for County consistent with geography_index
-"household_seed, person_seed",gqtype,"Group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=NA)"
 "household_seed, person_seed",unique_hh_id,Unique household identification number
 "household_seed, person_seed",VARIABLES IN CAPS,"Standard PUMS variables, see: https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2014-2018.csv"
 marginals,age_is_[category],Person age category
