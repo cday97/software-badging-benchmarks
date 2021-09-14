@@ -49,13 +49,13 @@ county_dict_df <- tibble(county = seq(from = 1, to = 9),
                                          "Contra Costa",
                                          "Solano",
                                          "Napa",
-                                         "Sonoma", 
+                                         "Sonoma",
                                          "Marin"))
 ```
 
 # Data Reads
 ```{r read}
-hh_seed_df <- read_csv(household_seed_file_name, 
+hh_seed_df <- read_csv(household_seed_file_name,
                        col_types = cols(.default = col_integer(),
                                         RT = col_character(),
                                         SERIALNO = col_character(),
@@ -70,7 +70,7 @@ hh_seed_df <- read_csv(household_seed_file_name,
                                         hh_income_2000 = col_double(),
                                         hh_income_2010 = col_double()))
 
-person_seed_df <- read_csv(person_seed_file_name, 
+person_seed_df <- read_csv(person_seed_file_name,
                            col_types = cols(.default = col_integer(),
                                             RT = col_character(),
                                             SERIALNO = col_character(),
@@ -118,13 +118,13 @@ output_hh_seed_df <- hh_seed_df %>%
   )) %>%
   mutate(workers = if_else(TYPE == 1, hh_workers_from_esr, 0L)) %>%
   select(RT, SERIALNO, DIVISION, PUMA, REGION, ST, ADJINC, WGTP, NP,
-         TYPE, BLD, HHT, HINCP, HUPAC, NPF, TEN, VEH, 
+         TYPE, BLD, HHT, HINCP, HUPAC, NPF, TEN, VEH,
          county_index = COUNTY, unique_hh_id, weight, hhsize, incomeQ, workers, hhgqtype)
 # remove NA
-output_hh_seed_df <- replace_na(output_hh_seed_df, 
+output_hh_seed_df <- replace_na(output_hh_seed_df,
                                 list(BLD=0,HHT=0,HINCP=0,HUPAC=0,NPF=0,TEN=0,VEH=0))
 
-# Persons 
+# Persons
 make_integers_vector <- c("COW", "MIL", "PINCP", "POWPUMA")
 output_person_seed_df <- person_seed_df %>%
   mutate(across(all_of(make_integers_vector), as.integer)) %>%
@@ -134,7 +134,7 @@ output_person_seed_df <- person_seed_df %>%
          SCHG, SCHL, SEX, WKHP, WKW, ESR, HISP, PINCP, POWPUMA,
          unique_hh_id, county_index = COUNTY, age, occupation, gqtype)
 # remove NA
-output_person_seed_df <- replace_na(output_person_seed_df, 
+output_person_seed_df <- replace_na(output_person_seed_df,
                                     list(COW=0,MIL=0,SCHG=0,SCHL=0,WKHP=0,WKW=0,PINCP=0,POWPUMA=0))
 
 # Marginals
@@ -144,9 +144,9 @@ county_df <- county_marg_df %>%
   mutate(geography = "county") %>%
   rename(geography_index = county, geography_name = county_name) %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
-               names_to = "variable", 
+               names_to = "variable",
                values_to = "marginal") %>%
-  mutate(variable = recode(variable, 
+  mutate(variable = recode(variable,
                            pers_occ_management   = "occupation_is_1",
                            pers_occ_professional = "occupation_is_2",
                            pers_occ_services     = "occupation_is_3",
@@ -173,12 +173,12 @@ taz_hh_df <- taz_marg_df %>%
          workers_is_2 = hh_wrks_2,
          workers_is_3_or_more = hh_wrks_3_plus) %>%
   select(starts_with("geography"),
-         number, 
+         number,
          starts_with("hhsize_is_"),
          starts_with("incomeQ_is"),
          starts_with("workers_is")) %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
-               names_to = "variable", 
+               names_to = "variable",
                values_to = "marginal") %>%
   mutate(person_or_household = "household")
 
@@ -198,14 +198,14 @@ taz_person_df <- taz_marg_df %>%
          starts_with("age_is"),
          starts_with("gqtype_is")) %>%
   pivot_longer(., cols = -c("geography_index", "geography", "geography_name"),
-               names_to = "variable", 
+               names_to = "variable",
                values_to = "marginal") %>%
   mutate(person_or_household = "person")
-  
+
 
 output_marginals_df <- bind_rows(county_df, taz_hh_df, taz_person_df) %>%
   mutate(year = 2015)
-  
+
 # geographies
 output_geo_df <- geo_df %>%
   select(taz = TAZ,
@@ -237,10 +237,12 @@ dict_df <- tibble(file = c("household_seed",
                                "hhsize",
                                "incomeQ",
                                "workers",
+                               # household_seed, person_seed
                                "VARIABLES IN CAPS",
                                "county_index",
                                "unique_hh_id",
                                "[hh]gqtype",
+                               # marginals
                                "occupation_is_[occupation]",
                                "number_households",
                                "hhsize_is_[number of persons]",
@@ -248,25 +250,29 @@ dict_df <- tibble(file = c("household_seed",
                                "worker_[category]",
                                "age_is_[category]",
                                "gqtype_is_[category]",
+                               # person_seed
                                "occupation",
                                "age"),
                   definiton = c("PUMS expansion factor for household record",
                                 "Number of persons in the household",
                                 "Income quantile category",
                                 "Number of workers in the household",
+                                # household_seed, person_seed
                                 "Standard PUMS variables, see: https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2014-2018.csv",
                                 "Integer index for County consistent with geography_index",
                                 "Unique household identification number",
-                                "Group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=NA)",
+                                "Non-institutional group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=in household)",
+                                # marginals
                                 "Persons by occupation category",
                                 "Number of households, including group quarters",
                                 "Number of persons in the household, from 1 to 4+",
                                 "Household income quantile category based on $2000 (1=less than $30k, 2=$30k-$60k, 3=$60k-100k, 4=over $100k, 0=NA",
                                 "Number of workers in the household, from 1 to 3+",
                                 "Person age category",
+                                "Category of group quarters living arrangement",
+                                # person_seed
                                 "Occupation category (1=management, 2=professional, 3=services, 4=retail, 5=manual, 6=military, 0=NA)",
-                                "Age in years",
-                                "Category of group quarters living arrangement"))
+                                "Age in years"))
 
 dict_df <- arrange(dict_df, file, variable)
 ```
@@ -274,19 +280,18 @@ dict_df <- arrange(dict_df, file, variable)
 
 # Write
 ```{r write}
-write_csv(dict_df, path = paste0(output_data_dictionary_file_name, ".csv"))
+write_csv(dict_df, file = paste0(output_data_dictionary_file_name, ".csv"))
 write_feather(dict_df, sink = paste0(output_data_dictionary_file_name, ".feather"))
 
-write_csv(output_hh_seed_df, path = paste0(output_household_seed_file_name, ".csv"))
+write_csv(output_hh_seed_df, file = paste0(output_household_seed_file_name, ".csv"))
 write_feather(output_hh_seed_df, sink = paste0(output_household_seed_file_name, ".feather"))
 
-write_csv(output_person_seed_df, path = paste0(output_person_seed_file_name, ".csv"))
+write_csv(output_person_seed_df, file = paste0(output_person_seed_file_name, ".csv"))
 write_feather(output_person_seed_df, sink = paste0(output_person_seed_file_name, ".feather"))
 
-write_csv(output_marginals_df, path = paste0(output_marginal_database_file_name, ".csv"))
+write_csv(output_marginals_df, file = paste0(output_marginal_database_file_name, ".csv"))
 write_feather(output_marginals_df, sink = paste0(output_marginal_database_file_name, ".feather"))
 
-write_csv(output_geo_df, path = paste0(output_geography_file_name, ".csv"))
+write_csv(output_geo_df, file = paste0(output_geography_file_name, ".csv"))
 write_feather(output_geo_df, sink = paste0(output_geography_file_name, ".feather"))
 ```
-

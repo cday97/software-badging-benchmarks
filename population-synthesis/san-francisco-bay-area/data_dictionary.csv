@@ -3,16 +3,16 @@ household_seed,hhsize,Number of persons in the household
 household_seed,incomeQ,Income quantile category
 household_seed,weight,PUMS expansion factor for household record
 household_seed,workers,Number of workers in the household
-"household_seed, person_seed",[hh]gqtype,"Group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=NA)"
+"household_seed, person_seed",[hh]gqtype,"Non-institutional group quarters living arrangement (1=university, 2=military, 3=other non-institutional, 0=in household)"
 "household_seed, person_seed",county_index,Integer index for County consistent with geography_index
 "household_seed, person_seed",unique_hh_id,Unique household identification number
 "household_seed, person_seed",VARIABLES IN CAPS,"Standard PUMS variables, see: https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2014-2018.csv"
 marginals,age_is_[category],Person age category
-marginals,gqtype_is_[category],"Occupation category (1=management, 2=professional, 3=services, 4=retail, 5=manual, 6=military, 0=NA)"
+marginals,gqtype_is_[category],Category of group quarters living arrangement
 marginals,hhsize_is_[number of persons],"Number of persons in the household, from 1 to 4+"
 marginals,incomeQ_[category],"Household income quantile category based on $2000 (1=less than $30k, 2=$30k-$60k, 3=$60k-100k, 4=over $100k, 0=NA"
 marginals,number_households,"Number of households, including group quarters"
 marginals,occupation_is_[occupation],Persons by occupation category
 marginals,worker_[category],"Number of workers in the household, from 1 to 3+"
-person_seed,age,Category of group quarters living arrangement
-person_seed,occupation,Age in years
+person_seed,age,Age in years
+person_seed,occupation,"Occupation category (1=management, 2=professional, 3=services, 4=retail, 5=manual, 6=military, 0=NA)"
