@@ -506,26 +506,20 @@ dict_df &lt;- arrange(dict_df, file, variable)</code></pre>
 <h1>Write</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfY3N2KGRpY3RfZGYsIHBhdGggPSBwYXN0ZTAob3V0cHV0X2RhdGFfZGljdGlvbmFyeV9maWxlX25hbWUsIFwiLmNzdlwiKSlcbmBgYCJ9 -->
-<pre class="r"><code>write_csv(dict_df, path = paste0(output_data_dictionary_file_name, &quot;.csv&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiVGhlIGBwYXRoYCBhcmd1bWVudCBvZiBgd3JpdGVfY3N2KClgIGlzIGRlcHJlY2F0ZWQgYXMgb2YgcmVhZHIgMS40LjAuXG5QbGVhc2UgdXNlIHRoZSBgZmlsZWAgYXJndW1lbnQgaW5zdGVhZC5cbiJ9 -->
-<pre><code>The `path` argument of `write_csv()` is deprecated as of readr 1.4.0.
-Please use the `file` argument instead.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfZmVhdGhlcihkaWN0X2RmLCBzaW5rID0gcGFzdGUwKG91dHB1dF9kYXRhX2RpY3Rpb25hcnlfZmlsZV9uYW1lLCBcIi5mZWF0aGVyXCIpKVxuXG53cml0ZV9jc3Yob3V0cHV0X2hoX3NlZWRfZGYsIHBhdGggPSBwYXN0ZTAob3V0cHV0X2hvdXNlaG9sZF9zZWVkX2ZpbGVfbmFtZSwgXCIuY3N2XCIpKVxud3JpdGVfZmVhdGhlcihvdXRwdXRfaGhfc2VlZF9kZiwgc2luayA9IHBhc3RlMChvdXRwdXRfaG91c2Vob2xkX3NlZWRfZmlsZV9uYW1lLCBcIi5mZWF0aGVyXCIpKVxuXG53cml0ZV9jc3Yob3V0cHV0X3BlcnNvbl9zZWVkX2RmLCBwYXRoID0gcGFzdGUwKG91dHB1dF9wZXJzb25fc2VlZF9maWxlX25hbWUsIFwiLmNzdlwiKSlcbndyaXRlX2ZlYXRoZXIob3V0cHV0X3BlcnNvbl9zZWVkX2RmLCBzaW5rID0gcGFzdGUwKG91dHB1dF9wZXJzb25fc2VlZF9maWxlX25hbWUsIFwiLmZlYXRoZXJcIikpXG5cbndyaXRlX2NzdihvdXRwdXRfbWFyZ2luYWxzX2RmLCBwYXRoID0gcGFzdGUwKG91dHB1dF9tYXJnaW5hbF9kYXRhYmFzZV9maWxlX25hbWUsIFwiLmNzdlwiKSlcbndyaXRlX2ZlYXRoZXIob3V0cHV0X21hcmdpbmFsc19kZiwgc2luayA9IHBhc3RlMChvdXRwdXRfbWFyZ2luYWxfZGF0YWJhc2VfZmlsZV9uYW1lLCBcIi5mZWF0aGVyXCIpKVxuXG53cml0ZV9jc3Yob3V0cHV0X2dlb19kZiwgcGF0aCA9IHBhc3RlMChvdXRwdXRfZ2VvZ3JhcGh5X2ZpbGVfbmFtZSwgXCIuY3N2XCIpKVxud3JpdGVfZmVhdGhlcihvdXRwdXRfZ2VvX2RmLCBzaW5rID0gcGFzdGUwKG91dHB1dF9nZW9ncmFwaHlfZmlsZV9uYW1lLCBcIi5mZWF0aGVyXCIpKVxuYGBgIn0= -->
-<pre class="r"><code>write_feather(dict_df, sink = paste0(output_data_dictionary_file_name, &quot;.feather&quot;))
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfY3N2KGRpY3RfZGYsIGZpbGUgPSBwYXN0ZTAob3V0cHV0X2RhdGFfZGljdGlvbmFyeV9maWxlX25hbWUsIFwiLmNzdlwiKSlcbndyaXRlX2ZlYXRoZXIoZGljdF9kZiwgc2luayA9IHBhc3RlMChvdXRwdXRfZGF0YV9kaWN0aW9uYXJ5X2ZpbGVfbmFtZSwgXCIuZmVhdGhlclwiKSlcblxud3JpdGVfY3N2KG91dHB1dF9oaF9zZWVkX2RmLCBmaWxlID0gcGFzdGUwKG91dHB1dF9ob3VzZWhvbGRfc2VlZF9maWxlX25hbWUsIFwiLmNzdlwiKSlcbndyaXRlX2ZlYXRoZXIob3V0cHV0X2hoX3NlZWRfZGYsIHNpbmsgPSBwYXN0ZTAob3V0cHV0X2hvdXNlaG9sZF9zZWVkX2ZpbGVfbmFtZSwgXCIuZmVhdGhlclwiKSlcblxud3JpdGVfY3N2KG91dHB1dF9wZXJzb25fc2VlZF9kZiwgZmlsZSA9IHBhc3RlMChvdXRwdXRfcGVyc29uX3NlZWRfZmlsZV9uYW1lLCBcIi5jc3ZcIikpXG53cml0ZV9mZWF0aGVyKG91dHB1dF9wZXJzb25fc2VlZF9kZiwgc2luayA9IHBhc3RlMChvdXRwdXRfcGVyc29uX3NlZWRfZmlsZV9uYW1lLCBcIi5mZWF0aGVyXCIpKVxuXG53cml0ZV9jc3Yob3V0cHV0X21hcmdpbmFsc19kZiwgZmlsZSA9IHBhc3RlMChvdXRwdXRfbWFyZ2luYWxfZGF0YWJhc2VfZmlsZV9uYW1lLCBcIi5jc3ZcIikpXG53cml0ZV9mZWF0aGVyKG91dHB1dF9tYXJnaW5hbHNfZGYsIHNpbmsgPSBwYXN0ZTAob3V0cHV0X21hcmdpbmFsX2RhdGFiYXNlX2ZpbGVfbmFtZSwgXCIuZmVhdGhlclwiKSlcblxud3JpdGVfY3N2KG91dHB1dF9nZW9fZGYsIGZpbGUgPSBwYXN0ZTAob3V0cHV0X2dlb2dyYXBoeV9maWxlX25hbWUsIFwiLmNzdlwiKSlcbndyaXRlX2ZlYXRoZXIob3V0cHV0X2dlb19kZiwgc2luayA9IHBhc3RlMChvdXRwdXRfZ2VvZ3JhcGh5X2ZpbGVfbmFtZSwgXCIuZmVhdGhlclwiKSlcbmBgYCJ9 -->
+<pre class="r"><code>write_csv(dict_df, file = paste0(output_data_dictionary_file_name, &quot;.csv&quot;))
+write_feather(dict_df, sink = paste0(output_data_dictionary_file_name, &quot;.feather&quot;))
 
-write_csv(output_hh_seed_df, path = paste0(output_household_seed_file_name, &quot;.csv&quot;))
+write_csv(output_hh_seed_df, file = paste0(output_household_seed_file_name, &quot;.csv&quot;))
 write_feather(output_hh_seed_df, sink = paste0(output_household_seed_file_name, &quot;.feather&quot;))
 
-write_csv(output_person_seed_df, path = paste0(output_person_seed_file_name, &quot;.csv&quot;))
+write_csv(output_person_seed_df, file = paste0(output_person_seed_file_name, &quot;.csv&quot;))
 write_feather(output_person_seed_df, sink = paste0(output_person_seed_file_name, &quot;.feather&quot;))
 
-write_csv(output_marginals_df, path = paste0(output_marginal_database_file_name, &quot;.csv&quot;))
+write_csv(output_marginals_df, file = paste0(output_marginal_database_file_name, &quot;.csv&quot;))
 write_feather(output_marginals_df, sink = paste0(output_marginal_database_file_name, &quot;.feather&quot;))
 
-write_csv(output_geo_df, path = paste0(output_geography_file_name, &quot;.csv&quot;))
+write_csv(output_geo_df, file = paste0(output_geography_file_name, &quot;.csv&quot;))
 write_feather(output_geo_df, sink = paste0(output_geography_file_name, &quot;.feather&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
