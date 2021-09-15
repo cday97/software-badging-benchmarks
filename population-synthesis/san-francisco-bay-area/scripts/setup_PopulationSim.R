@@ -62,11 +62,24 @@ controls_df <- mutate(controls_df,
                      control_field == "number" ~ "(households.WGTP > 0) & (households.WGTP < np.inf)",
                      TRUE ~ "todo"))
 
+# these two controls are household controls, but they only apply to non groupquarters
+controls_df <- mutate(controls_df,
+                       expression = if_else(
+                         startsWith(control_field, "workers") | startsWith(control_field, "income"),
+                         paste0("(",expression,") & (households.hhgqtype==0)"),
+                         expression
+                       ))
+
 # following example_calm, total number of households is most important control
 controls_df <- mutate(controls_df,
                    importance = case_when(
-                     target=="number"             ~ 1000000000, # 1e9
-                     TRUE                         ~ 1000
+                     target=="number"             ~ 1000000000,
+                     startsWith(target,"hhsize")  ~ 5000,
+                     startsWith(target,"workers") ~ 1000,
+                     startsWith(target,"gqtype")  ~ 1000,
+                     startsWith(target,"age")     ~ 500,
+                     startsWith(target,"incomeQ") ~ 500,
+                     TRUE                         ~ 100
                     ))
 
 # select just the columns we want
