@@ -1,7 +1,10 @@
 ```shell
 setopt interactivecomments
 # The above makes it so zsh is ok with my comments
-# I am on macOS 10.15.7 Catalina
+# I am on macOS 11.5.2 Big Sur
+
+# add R to my path
+export PATH=/Library/Frameworks/R.framework/Resources:$PATH
 
 # this is the location of the SF Bay Area population synthesis example in software-badging-benchmarks
 export zephyr_sf_dir=/Users/lzorn/Documents/GitHub/software-badging-benchmarks/population-synthesis/san-francisco-bay-area
@@ -44,7 +47,7 @@ cp $zephyr_sf_dir/person_seed.csv    data
 
 # create configs/controls.csv and and control totals (data/control_totals_[county,taz].csv)
 # from the marginals
-/Library/Frameworks/R.framework/Resources/Rscript --vanilla $zephyr_sf_dir/scripts/setup_PopulationSim.R
+Rscript --vanilla $zephyr_sf_dir/scripts/setup_PopulationSim.R
 # create a suffix for saving results
 export suffix=$(date +%y%m%d_%H%M)
 cp configs/controls.csv validation/controls_$suffix.csv
@@ -65,14 +68,31 @@ python run_populationsim.py
 # INFO - Time to execute run_model (13 models) : 1645.948 seconds (27.4 minutes)
 # INFO - Time to execute all models : 1646.103 seconds (27.4 minutes)
 
-/Library/Frameworks/R.framework/Resources/Rscript --vanilla $zephyr_sf_dir/scripts/combine_PopulationSim_summaries.R
+Rscript --vanilla $zephyr_sf_dir/scripts/combine_PopulationSim_summaries_to_long.R
 cp output/final_summary_long.csv validation/final_summary_long_$suffix.csv
+
+# copy to windows machine with tableau
+cp configs/controls.csv          /Volumes/lzorn-Documents/zephyr-populationsim-validation/controls_$suffix.csv
+cp output/final_summary_long.csv /Volumes/lzorn-Documents/zephyr-populationsim-validation/final_summary_long_$suffix.csv
 
 ```
 
 Some things I found:
 * PopulationSim doesn't seem to like string variables; the variables used in controls should be numeric
 * PopulationSim doesn't handle a variable called "size"; I'm guessing it collides with pandas.DataFrame.size()
+* Importance isn't relative. If you run PopulationSim with just total household controls and importance=1, it will validate poorly.  If you make importance=1000 it will validate perfectly.
+* why no county summary?
+pipeline = pd.io.pytables.HDFStore('output/pipeline.h5')
+pipeline.keys()
+
+
+output_tables:
+h5_store: False
+action: include
+prefix: final_
+tables:
+- checkpoints
+- accessibility
 
 The following is the settings.yaml file used above.
 ```yaml
@@ -88,8 +108,8 @@ SUB_BALANCE_WITH_FLOAT_SEED_WEIGHTS: False
 GROUP_BY_INCIDENCE_SIGNATURE: True
 USE_SIMUL_INTEGERIZER: True
 USE_CVXPY: False
-max_expansion_factor: 30
-
+max_expansion_factor: 50
+MAX_BALANCE_ITERATIONS_SIMULTANEOUS: 1000
 
 # Geographic Settings
 # ------------------------------------------------------------------
@@ -100,7 +120,7 @@ seed_geography: PUMA
 # Tracing
 # ------------------------------------------------------------------
 trace_geography:
-  taz: 1
+  taz: 62
 
 # Data Directory
 # ------------------------------------------------------------------
@@ -140,7 +160,6 @@ total_hh_control: number
 # ------------------------------------------------------------------
 control_file_name: controls.csv
 
-
 # Output Tables
 # ------------------------------------------------------------------
 # output_tables can specify either a list of output tables to include or to skip
@@ -161,7 +180,7 @@ output_tables:
     - summary_county_8
     - summary_county_9
     - expanded_household_ids
-
+    - trace_taz_weights
 
 # Synthetic Population Output Specification
 # ------------------------------------------------------------------
