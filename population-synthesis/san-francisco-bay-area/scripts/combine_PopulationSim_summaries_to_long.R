@@ -12,11 +12,11 @@ for (summary_file in summary_files) {
   print(paste("Reading summary file", summary_file))
   summary_df <- read_csv(summary_file)
   # print(head(summary_df))
-  
+
   # convert to columns: geography, id, type, control, result, diff
-  summary_df <- pivot_longer(summary_df, 
+  summary_df <- pivot_longer(summary_df,
                              cols=ends_with(c("_control","_result","_diff")),
-                             names_to = c("variable",".value"),
+                             names_to = c("control_field",".value"),
                              names_pattern = "(.*)_(control|result|diff)")
   all_summary_df <- rbind(all_summary_df, summary_df)
 }
