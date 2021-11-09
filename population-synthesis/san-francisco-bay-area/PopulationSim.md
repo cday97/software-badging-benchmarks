@@ -1,13 +1,13 @@
 ```shell
 setopt interactivecomments
 # The above makes it so zsh is ok with my comments
-# I am on macOS 11.5.2 Big Sur
+# I am on macOS 112.0.1 Monterey
 
 # add R to my path
 export PATH=/Library/Frameworks/R.framework/Resources:$PATH
 
 # this is the location of the SF Bay Area population synthesis example in software-badging-benchmarks
-export zephyr_sf_dir=/Users/lzorn/Documents/GitHub/software-badging-benchmarks/population-synthesis/san-francisco-bay-area
+export zephyr_sf_dir=/Users/lmz/Documents/GitHub/software-badging-benchmarks/population-synthesis/san-francisco-bay-area
 
 # Following the Installation instructions on https://activitysim.github.io/populationsim/getting_started.html
 conda create -n popsim python=3.8
