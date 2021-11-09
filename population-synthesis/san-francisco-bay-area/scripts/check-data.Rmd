@@ -1,0 +1,53 @@
+---
+title: "Check Data"
+output: html_notebook
+---
+
+# Overhead
+```{r overhead, include = FALSE}
+packages_vector <- c("tidyverse",
+                     "arrow")
+
+need_to_install <- packages_vector[!(packages_vector %in% installed.packages()[,"Package"])]
+
+if (length(need_to_install)) install.packages(need_to_install)
+
+for (package in packages_vector) {
+  library(package, character.only = TRUE)
+}
+
+
+```
+
+
+# Remote I/O
+```{r remote-io}
+data_dir <- "../"
+
+data_dictionary_file_name <- paste0(data_dir, "data_dictionary")
+household_seed_file_name <- paste0(data_dir, "household_seed.feather")
+person_seed_file_name <- paste0(data_dir, "person_seed.feather")
+marginal_database_file_name <- paste0(data_dir, "marginals")
+geography_file_name <- paste0(data_dir, "geographies")
+```
+
+# Parameters
+```{r parameters}
+
+```
+
+# Data Reads
+```{r read}
+hh_seed_df <- arrow::read_feather(household_seed_file_name)
+person_seed_df <- read_feather(person_seed_file_name)
+
+```
+
+# Checks
+```{r check-01}
+income_df <- hh_seed_df %>%
+  group_by(TYPE, income) %>%
+  summarise(count = n(), .groups = "drop")
+
+income_df
+```
