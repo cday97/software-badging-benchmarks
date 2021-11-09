@@ -15,6 +15,7 @@ conda activate popsim
 # Now in popsim environment...
 
 conda install pytables
+pip install activitysim
 
 # Here, we'll diverge a bit from the instructions in order install (in editable mode) populationsim from a clone of my fork
 # e.g. https://github.com/lmz/populationsim
@@ -46,7 +47,8 @@ cp $zephyr_sf_dir/household_seed.csv data
 cp $zephyr_sf_dir/person_seed.csv    data
 
 # create configs/controls.csv and and control totals (data/control_totals_[county,taz].csv)
-# from the marginals
+# from the marginals.  
+# Requires R (of course) and R libraries tidyverse and arrow.
 Rscript --vanilla $zephyr_sf_dir/scripts/setup_PopulationSim.R
 # create a suffix for saving results
 export suffix=$(date +%y%m%d_%H%M)
@@ -68,6 +70,8 @@ python run_populationsim.py
 # INFO - Time to execute run_model (13 models) : 1645.948 seconds (27.4 minutes)
 # INFO - Time to execute all models : 1646.103 seconds (27.4 minutes)
 
+# Summarize validation for tableau visualization
+# Requires R (of course) and R library tidyverse.
 Rscript --vanilla $zephyr_sf_dir/scripts/combine_PopulationSim_summaries_to_long.R
 cp output/final_summary_long.csv validation/final_summary_long_$suffix.csv
 ```
