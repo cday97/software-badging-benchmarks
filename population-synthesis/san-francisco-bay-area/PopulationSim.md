@@ -70,29 +70,12 @@ python run_populationsim.py
 
 Rscript --vanilla $zephyr_sf_dir/scripts/combine_PopulationSim_summaries_to_long.R
 cp output/final_summary_long.csv validation/final_summary_long_$suffix.csv
-
-# copy to windows machine with tableau
-cp configs/controls.csv          /Volumes/lzorn-Documents/zephyr-populationsim-validation/controls_$suffix.csv
-cp output/final_summary_long.csv /Volumes/lzorn-Documents/zephyr-populationsim-validation/final_summary_long_$suffix.csv
-
 ```
 
 Some things I found:
 * PopulationSim doesn't seem to like string variables; the variables used in controls should be numeric
 * PopulationSim doesn't handle a variable called "size"; I'm guessing it collides with pandas.DataFrame.size()
 * Importance isn't relative. If you run PopulationSim with just total household controls and importance=1, it will validate poorly.  If you make importance=1000 it will validate perfectly.
-* why no county summary?
-pipeline = pd.io.pytables.HDFStore('output/pipeline.h5')
-pipeline.keys()
-
-
-output_tables:
-h5_store: False
-action: include
-prefix: final_
-tables:
-- checkpoints
-- accessibility
 
 The following is the settings.yaml file used above.
 ```yaml
