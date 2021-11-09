@@ -7,3 +7,5 @@
 3. `marginals` -- Expansion targets by geography and person/household category
 3. `geographies` -- Mapping from PUMAs, counties, and travel analysis zones (TAZs)
 4. `data_dictionary` -- Identification of variables used in above files
+
+See [PopulationSim.md](PopulationSim.md) for [PopulationSim](https://github.com/ActivitySim/populationsim) Implementation
